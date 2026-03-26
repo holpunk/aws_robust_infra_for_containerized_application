@@ -8,7 +8,3 @@ variable "vpc_id" {
   description = "The VPC ID"
 }
 
-variable "container_port" {
-  type        = number
-  description = "Port the container application listens on"
-}

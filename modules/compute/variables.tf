@@ -24,3 +24,13 @@ variable "eks_desired_size" {
   description = "Desired number of worker nodes"
   default     = 2
 }
+
+variable "alb_sg_id" {
+  type        = string
+  description = "Security Group ID of the ALB"
+}
+
+variable "container_port" {
+  type        = number
+  description = "Port the container application listens on"
+}

@@ -28,7 +28,6 @@ module "security" {
 
   project_name   = var.project_name
   vpc_id         = module.networking.vpc_id
-  container_port = var.container_port
 }
 
 module "acm" {
@@ -57,6 +56,8 @@ module "compute" {
   public_subnet_ids       = module.networking.public_subnet_ids
   eks_node_instance_types = var.eks_node_instance_types
   eks_desired_size        = var.eks_desired_size
+  alb_sg_id               = module.security.alb_sg_id
+  container_port          = var.container_port
 }
 
 module "dns" {

@@ -91,3 +91,13 @@ resource "aws_eks_node_group" "main" {
     aws_iam_role_policy_attachment.eks_container_registry_readonly
   ]
 }
+
+resource "aws_security_group_rule" "alb_to_eks_nodes" {
+  type                     = "ingress"
+  from_port                = var.container_port
+  to_port                  = var.container_port
+  protocol                 = "tcp"
+  security_group_id        = aws_eks_cluster.main.vpc_config[0].cluster_security_group_id
+  source_security_group_id = var.alb_sg_id
+  description              = "Allow traffic from ALB to EKS Nodes on container port"
+}
