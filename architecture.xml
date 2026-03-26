@@ -1,0 +1,178 @@
+<mxfile host="app.diagrams.net" modified="2026-03-26T12:00:00Z" agent="Mozilla/5.0" version="21.6.8" type="device">
+  <diagram id="aws_infra_diagram" name="AWS Container Architecture">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="users" value="Internet Clients" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="450" y="10" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="route53" value="Amazon Route 53\n(DNS Resolution)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="450" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Main AWS Region -->
+        <mxCell id="aws_cloud" value="AWS Region" style="swimlane;whiteSpace=wrap;html=1;startSize=23;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="210" width="1240" height="860" as="geometry" />
+        </mxCell>
+
+        <!-- User VPC -->
+        <mxCell id="vpc" value="Customer VPC" style="swimlane;whiteSpace=wrap;html=1;startSize=23;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="20" y="40" width="880" height="800" as="geometry" />
+        </mxCell>
+
+        <mxCell id="igw" value="Internet Gateway (IGW)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="vpc">
+          <mxGeometry x="350" y="40" width="180" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- AZ 1 -->
+        <mxCell id="az1" value="Availability Zone A" style="swimlane;whiteSpace=wrap;html=1;startSize=23;dashed=1;" vertex="1" parent="vpc">
+          <mxGeometry x="40" y="100" width="380" height="680" as="geometry" />
+        </mxCell>
+        
+        <!-- Public Subnet 1 -->
+        <mxCell id="pub_sub1" value="Public Subnet (Tier 1)" style="swimlane;whiteSpace=wrap;html=1;startSize=23;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="az1">
+          <mxGeometry x="20" y="40" width="340" height="280" as="geometry" />
+        </mxCell>
+        <!-- Components in Pub Sub 1 -->
+        <mxCell id="nat1" value="NAT Gateway" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="pub_sub1">
+          <mxGeometry x="110" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="alb1" value="Application Load Balancer ENI\n[SG: alb-sg]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="pub_sub1">
+          <mxGeometry x="70" y="110" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="eni_pub1" value="EKS Cross-Account ENI\n[SG: EKS Cluster SG]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;" vertex="1" parent="pub_sub1">
+          <mxGeometry x="70" y="190" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Private Subnet 1 -->
+        <mxCell id="priv_sub1" value="Private Subnet (Tier 2)" style="swimlane;whiteSpace=wrap;html=1;startSize=23;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="az1">
+          <mxGeometry x="20" y="340" width="340" height="300" as="geometry" />
+        </mxCell>
+        <!-- Components in Priv Sub 1 -->
+        <mxCell id="eks_node1" value="Amazon EC2 (Worker Nodes ENI)\nOS: Amazon Linux / Bottlerocket\n[SG: EKS Node Group SG]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="priv_sub1">
+          <mxGeometry x="60" y="60" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="eni_priv1" value="EKS Cross-Account ENI\n[SG: EKS Cluster SG]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;" vertex="1" parent="priv_sub1">
+          <mxGeometry x="70" y="190" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- AZ 2 -->
+        <mxCell id="az2" value="Availability Zone B" style="swimlane;whiteSpace=wrap;html=1;startSize=23;dashed=1;" vertex="1" parent="vpc">
+          <mxGeometry x="460" y="100" width="380" height="680" as="geometry" />
+        </mxCell>
+        
+        <!-- Public Subnet 2 -->
+        <mxCell id="pub_sub2" value="Public Subnet (Tier 1)" style="swimlane;whiteSpace=wrap;html=1;startSize=23;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="az2">
+          <mxGeometry x="20" y="40" width="340" height="280" as="geometry" />
+        </mxCell>
+        <!-- Components in Pub Sub 2 -->
+        <mxCell id="nat2" value="NAT Gateway" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="pub_sub2">
+          <mxGeometry x="110" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="alb2" value="Application Load Balancer ENI\n[SG: alb-sg]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="pub_sub2">
+          <mxGeometry x="70" y="110" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="eni_pub2" value="EKS Cross-Account ENI\n[SG: EKS Cluster SG]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;" vertex="1" parent="pub_sub2">
+          <mxGeometry x="70" y="190" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Private Subnet 2 -->
+        <mxCell id="priv_sub2" value="Private Subnet (Tier 2)" style="swimlane;whiteSpace=wrap;html=1;startSize=23;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="az2">
+          <mxGeometry x="20" y="340" width="340" height="300" as="geometry" />
+        </mxCell>
+        <!-- Components in Priv Sub 2 -->
+        <mxCell id="eks_node2" value="Amazon EC2 (Worker Nodes ENI)\nOS: Amazon Linux / Bottlerocket\n[SG: EKS Node Group SG]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="priv_sub2">
+          <mxGeometry x="60" y="60" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="eni_priv2" value="EKS Cross-Account ENI\n[SG: EKS Cluster SG]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;" vertex="1" parent="priv_sub2">
+          <mxGeometry x="70" y="190" width="200" height="60" as="geometry" />
+        </mxCell>
+
+
+        <!-- AWS Managed VPC -->
+        <mxCell id="aws_managed_vpc" value="AWS Managed VPC" style="swimlane;whiteSpace=wrap;html=1;startSize=23;fillColor=#ffe6cc;strokeColor=#d79b00;dashed=1;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="920" y="40" width="300" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="eks_cp" value="Amazon EKS Control Plane\n(API Server, etcd)\n[SG: EKS Cluster SG]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="aws_managed_vpc">
+          <mxGeometry x="40" y="60" width="220" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Common AWS Services outside VPC but in Region -->
+        <mxCell id="ecr" value="Amazon ECR\n(Private Registry)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="930" y="280" width="280" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="acm" value="AWS Certificate Manager (ACM)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="930" y="400" width="280" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tf_state" value="Terraform State Data" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="930" y="510" width="280" height="80" as="geometry" />
+        </mxCell>
+
+
+        <!-- Edges Flow -->
+        <mxCell id="edge_user_route53" edge="1" parent="1" source="users" target="route53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_route53_alb1" edge="1" parent="1" source="route53" target="alb1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_route53_alb2" edge="1" parent="1" source="route53" target="alb2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_alb1_eks1" edge="1" parent="1" source="alb1" target="eks_node1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_alb2_eks2" edge="1" parent="1" source="alb2" target="eks_node2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Internet via NAT -->
+        <mxCell id="edge_eks1_nat1" edge="1" parent="1" source="eks_node1" target="nat1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+               <mxPoint x="120" y="550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_eks2_nat2" edge="1" parent="1" source="eks_node2" target="nat2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+               <mxPoint x="540" y="550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- EKS Control Plane to ENIs (Public) -->
+        <mxCell id="edge_cp_eni_pub1" edge="1" parent="1" source="eks_cp" target="eni_pub1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_cp_eni_pub2" edge="1" parent="1" source="eks_cp" target="eni_pub2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- EKS Control Plane to ENIs (Private) -->
+        <mxCell id="edge_cp_eni_priv1" edge="1" parent="1" source="eks_cp" target="eni_priv1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_cp_eni_priv2" edge="1" parent="1" source="eks_cp" target="eni_priv2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ENIs to Nodes -->
+        <mxCell id="edge_eni_priv1_node1" edge="1" parent="1" source="eni_priv1" target="eks_node1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_eni_priv2_node2" edge="1" parent="1" source="eni_priv2" target="eks_node2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
